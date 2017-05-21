@@ -91,6 +91,9 @@ public class Generator {
                 }
             }
         }
+        for (int i = 0; i < requestQueue.size(); i++) {
+            requestQueue.get(i).timeOfRequest = i;
+        }
         return requestQueue;
     }
 

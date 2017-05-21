@@ -8,6 +8,7 @@ import java.util.List;
 public class Process {
     List<Page> listOfPages;
     int index;
+    int pageFaults = 0;
     public Process(List<Page> listOfPages) {
         this.listOfPages = listOfPages;
     }

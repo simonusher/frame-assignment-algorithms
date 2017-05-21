@@ -23,6 +23,5 @@ public class LRU extends PageReplacementAlgorithm {
             }
         }
         return index;
-
     }
 }
