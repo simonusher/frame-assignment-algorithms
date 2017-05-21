@@ -46,7 +46,7 @@ public abstract class FrameAllocationAlgorithm {
                     mainMemory[index++].process = p;
                 }
                 else {
-                    int size = (int)(Math.round(0.2 * listOfPages.size()));
+                    int size = (int)(Math.round(0.3 * listOfPages.size()));
                     if(mainMemory.length - index > size){
                         for (int i = 0; i < size; i++) {
                             mainMemory[index++].process = p;
@@ -75,11 +75,11 @@ public abstract class FrameAllocationAlgorithm {
 
     public int findPageToRemove() {
         int index = 0;
-        while(!mainMemory[index].process.equals(activeRequest.process)) index ++;
+        while(mainMemory[index].process != null && !mainMemory[index].process.equals(activeRequest.process)) index ++;
         Frame f = mainMemory[index];
         for (int i = index + 1; i < mainMemory.length; i++) {
-            if(!mainMemory[i].process.equals(activeRequest.process)) index ++;
-            else if (comparator.compare(f.page, mainMemory[i].page) == -1){
+            if(mainMemory[i].process != null && mainMemory[i].process.equals(activeRequest.process)
+                    && comparator.compare(f.page, mainMemory[i].page) == -1){
                 f = mainMemory[i];
                 index = i;
             }
@@ -89,7 +89,7 @@ public abstract class FrameAllocationAlgorithm {
 
     public int findEmpty(Process p){
         for (int i = 0; i < mainMemory.length; i++) {
-            if(mainMemory[i].page == null && (mainMemory[i].process.equals(p)) || mainMemory[i].process == null){
+            if(mainMemory[i].page == null && (mainMemory[i].process == null || mainMemory[i].process.equals(p))){
                 return i;
             }
         }
@@ -106,4 +106,33 @@ public abstract class FrameAllocationAlgorithm {
     public boolean isDone() {
         return requestQueue.size() == 0;
     }
+
+    public void printPageFaults (String name){
+        StringBuilder sb = new StringBuilder();
+        sb.append(name);
+        sb.append(" page faults: ");
+        sb.append(pageFaults);
+        sb.append("\n");
+        sb.append("[");
+        for (Process process : processes) {
+            sb.append(process.pageFaults);
+            sb.append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append("]");
+        System.out.println(sb.toString());
+    }
+
+    public void printMainMemory(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < mainMemory.length; i++) {
+            sb.append(mainMemory[i].process);
+            sb.append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append("]");
+        System.out.println(sb.toString());
+    }
+
 }

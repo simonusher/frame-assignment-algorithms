@@ -9,6 +9,7 @@ import java.util.Random;
 public class Generator {
     private static Random generator = new Random();
     private static int[] sizes = {13, 5, 10, 7, 20, 6, 8, 12, 2, 30};
+    public static int numberOfFrames = 80;
 
     static ArrayList<Page> generateVirtualMemory(int numberOfPages){
         ArrayList<Page> virtualMemory = new ArrayList<>();
@@ -25,30 +26,6 @@ public class Generator {
         }
         return virtualMemory;
     }
-
-//    static ArrayList<Request> generateRequestQueue(ArrayList<Page> virtualMemory, int numberOfRequests){
-//        ArrayList<Request> requestQueue = new ArrayList<>();
-//        int size = virtualMemory.size();
-//        Request lastGenerated;
-//        for (int i = 0; requestQueue.size() < numberOfRequests;) {
-//            lastGenerated = new Request(i++, virtualMemory.get(generator.nextInt(size)));
-//            if(requestQueue.size() < numberOfRequests) requestQueue.add(lastGenerated);
-//            int x;
-//            for (int j = 0; j < (numberOfRequests * 0.007/*7*/) && requestQueue.size() < numberOfRequests; j++) {
-//                x = generator.nextInt(10);
-//                if(x < 9){
-//                    lastGenerated = new Request(i++, requestQueue.get(requestQueue.size() - 1).page);
-//                    requestQueue.add(lastGenerated);
-//                }
-//                else{
-//                    lastGenerated = new Request(i++, virtualMemory.get(generator.nextInt(size)));
-//                    requestQueue.add(lastGenerated);
-//                    break;
-//                }
-//            }
-//        }
-//        return requestQueue;
-//    }
 
     static ArrayList<Request> generateRequestQueue(Process process, int numberOfRequests){
         ArrayList<Request> requestQueue = new ArrayList<>();
@@ -80,7 +57,7 @@ public class Generator {
         while(requestQueue.size() < numberOfRequests){
             ArrayList<Request> temp;
             for (Process p : processes)  {
-                temp = generateRequestQueue(p, p.listOfPages.size()*2);
+                temp = generateRequestQueue(p, /*p.listOfPages.size()*2*/ 10);
                 if(requestQueue.size() + temp.size() <= numberOfRequests){
                     requestQueue.addAll(temp);
                 }
