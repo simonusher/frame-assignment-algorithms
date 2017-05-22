@@ -8,8 +8,9 @@ import java.util.Random;
  */
 public class Generator {
     private static Random generator = new Random();
-    private static int[] sizes = {13, 5, 10, 7, 20, 6, 8, 12, 2, 30};
+    private static int[] sizes = {13, 5, 100, 7, 20, 6, 8, 12, 2, 30/*, 40*/};
     public static int numberOfFrames = 80;
+    private static int requestsPerProcess = 10;
 
     static ArrayList<Page> generateVirtualMemory(int numberOfPages){
         ArrayList<Page> virtualMemory = new ArrayList<>();
@@ -35,7 +36,7 @@ public class Generator {
             lastGenerated = new Request(i++, process.listOfPages.get(generator.nextInt(size)));
             if(requestQueue.size() < numberOfRequests) requestQueue.add(lastGenerated);
             int x;
-            double k = numberOfRequests * 0.01;
+            double k = numberOfRequests * 0.5;
             for (int j = 0; (j < k || j < 1) && requestQueue.size() < numberOfRequests; j++) {
                 x = generator.nextInt(10);
                 if(x < 9){
@@ -57,7 +58,7 @@ public class Generator {
         while(requestQueue.size() < numberOfRequests){
             ArrayList<Request> temp;
             for (Process p : processes)  {
-                temp = generateRequestQueue(p, /*p.listOfPages.size()*2*/ 10);
+                temp = generateRequestQueue(p, /*p.listOfPages.size()*2*//*generator.nextInt(91) + 10*/ requestsPerProcess );
                 if(requestQueue.size() + temp.size() <= numberOfRequests){
                     requestQueue.addAll(temp);
                 }

@@ -30,7 +30,12 @@ public class WorkingSetModel extends FrameAllocationAlgorithm{
             activeRequest.process.pageFaults++;
             place = findEmpty(activeRequest.process);
             if (place == -1) {
-                place = findPageToRemove();
+                try{
+                    place = findPageToRemove();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             mainMemory[place].page = activeRequest.page;
             activeRequest.page.placedInMemory = timePassed;
@@ -51,9 +56,17 @@ public class WorkingSetModel extends FrameAllocationAlgorithm{
             Map.Entry pair = (Map.Entry)it.next();
             Set<Page> hs = new HashSet<>();
             ArrayList <Page> temp = (ArrayList<Page>)pair.getValue();
+            if(temp.size() < 10) continue;
             hs.addAll(temp);
             int numberOfFrames = countFrames((Process)pair.getKey());
-            if(hs.size() < numberOfFrames) removeFrames((Process)pair.getKey(), numberOfFrames - hs.size());
+            if(hs.size() < numberOfFrames){
+                if(numberOfFrames - hs.size() > 1){
+                    removeFrames((Process)pair.getKey(), numberOfFrames - hs.size());
+                }
+                else{
+                    removeFrames((Process)pair.getKey(), numberOfFrames - hs.size() + 1);
+                }
+            }
             else if(hs.size() > numberOfFrames) addFrames((Process)pair.getKey(), hs.size() - numberOfFrames);
         }
     }

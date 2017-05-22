@@ -16,6 +16,6 @@ public class Request {
 
     @Override
     public String toString() {
-        return "" + page.toString();
+        return process.toString() + " " + page.toString();
     }
 }

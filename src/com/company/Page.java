@@ -19,6 +19,12 @@ public class Page {
         this.process = process;
     }
 
+    public void reset(){
+        this.placedInMemory = 0;
+        this.lastRequested = 0;
+        this.wasRequested = false;
+    }
+
     public String toString(){
         return "" + ID;
     }

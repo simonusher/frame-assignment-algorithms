@@ -33,7 +33,9 @@ public abstract class FrameAllocationAlgorithm {
         }
         comparator = new LastRequestedComparator();
         allocateNecessaryFrames();
+//        printMainMemory();
         allocateRest();
+//        printMainMemory();
     }
 
     protected void allocateNecessaryFrames(){
@@ -43,7 +45,9 @@ public abstract class FrameAllocationAlgorithm {
             if(index < mainMemory.length){
                 listOfPages = p.listOfPages;
                 if(listOfPages.size() < 5) {
-                    mainMemory[index++].process = p;
+//                    for (int i = 0; i < 2; i++) {
+                        mainMemory[index++].process = p;
+//                    }
                 }
                 else {
                     int size = (int)(Math.round(0.3 * listOfPages.size()));
@@ -75,7 +79,10 @@ public abstract class FrameAllocationAlgorithm {
 
     public int findPageToRemove() {
         int index = 0;
-        while(mainMemory[index].process != null && !mainMemory[index].process.equals(activeRequest.process)) index ++;
+        while(mainMemory[index].process != null){
+            if(mainMemory[index].process.equals(activeRequest.process)) break;
+            else index ++;
+        }
         Frame f = mainMemory[index];
         for (int i = index + 1; i < mainMemory.length; i++) {
             if(mainMemory[i].process != null && mainMemory[i].process.equals(activeRequest.process)
@@ -128,6 +135,8 @@ public abstract class FrameAllocationAlgorithm {
         sb.append("[");
         for (int i = 0; i < mainMemory.length; i++) {
             sb.append(mainMemory[i].process);
+            sb.append(" ");
+            sb.append(mainMemory[i].page);
             sb.append(", ");
         }
         sb.delete(sb.length() - 2, sb.length());

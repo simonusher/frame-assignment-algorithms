@@ -5,10 +5,31 @@ import java.util.ArrayList;
 /**
  * Created by Igor on 21.05.2017.
  */
-public class ProportionalAllocation extends EqualAllocation {
+public class ProportionalAllocation extends FrameAllocationAlgorithm {
 
     public ProportionalAllocation(ArrayList<Request> requestQueue, ArrayList<Process> processes, int mainMemorySize) {
         super(requestQueue, processes, mainMemorySize);
+    }
+
+    public void handleRequest() {
+        if(!isInMainMemory(activeRequest.page)){
+            pageFaults++;
+            activeRequest.process.pageFaults++;
+            place = findEmpty(activeRequest.process);
+            if(place == -1){
+                place = findPageToRemove();
+            }
+            mainMemory[place].page = activeRequest.page;
+            activeRequest.page.placedInMemory = timePassed;
+        }
+        activeRequest.page.lastRequested = timePassed;
+        activeRequest.page.wasRequested = true;
+        requestQueue.remove(0);
+//        printMainMemory();
+//        System.out.println(pageFaults);
+//        System.out.println();
+//        System.out.println();
+        if(!isDone()) activeRequest = requestQueue.get(0);
     }
 
     @Override
